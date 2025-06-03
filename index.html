@@ -58,26 +58,55 @@
     .member:last-child {
       border-bottom: none;
     }
+    .login-form {
+      background: #1c1c1c;
+      padding: 30px;
+      border-radius: 10px;
+      width: 100%;
+      max-width: 400px;
+      margin: 40px auto;
+      box-shadow: 0 0 15px rgba(0,255,229,0.2);
+    }
+    .login-form h2 {
+      color: #00ffe5;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .login-form input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border: none;
+      border-radius: 8px;
+      background: #2b2b2b;
+      color: white;
+    }
+    .login-form button {
+      width: 100%;
+      padding: 12px;
+      background: #00ffe5;
+      color: #000;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
   <header>
     <div class="logo">Myth Crew</div>
-    <div id="authArea">
-      <!-- Login/User Display Here -->
-    </div>
+    <div id="authArea"></div>
   </header>
   <div class="container">
-    <div class="member-list">
+    <div id="loginSection"></div>
+    <div class="member-list" id="memberSection" style="display: none;">
       <h2>Members</h2>
-      <div id="members">
-        <!-- Member list will appear here -->
-      </div>
+      <div id="members"></div>
     </div>
   </div>
 
   <script>
-    // Example login state simulation
     let loggedInUser = localStorage.getItem('mythUser') || null;
 
     function renderAuthArea() {
@@ -85,39 +114,64 @@
       authArea.innerHTML = '';
       if (loggedInUser) {
         authArea.innerHTML = `<span>Welcome, <strong>${loggedInUser}</strong></span>`;
-      } else {
-        const loginBtn = document.createElement('button');
-        loginBtn.textContent = 'Login';
-        loginBtn.className = 'auth-btn';
-        loginBtn.onclick = showLoginPrompt;
-        authArea.appendChild(loginBtn);
       }
     }
 
-    function showLoginPrompt() {
-      const username = prompt('Username:');
-      const password = prompt('Password:');
-      if (username && password) {
-        // TODO: Real validation can be added
-        localStorage.setItem('mythUser', username);
-        loggedInUser = username;
+    function renderLoginForm() {
+      const loginSection = document.getElementById('loginSection');
+      const memberSection = document.getElementById('memberSection');
+
+      if (loggedInUser) {
+        loginSection.style.display = 'none';
+        memberSection.style.display = 'block';
+        return;
+      }
+
+      loginSection.innerHTML = `
+        <div class="login-form">
+          <h2>Login</h2>
+          <input type="text" id="username" placeholder="Username" />
+          <input type="password" id="password" placeholder="Password" />
+          <button onclick="handleLogin()">Login</button>
+        </div>
+      `;
+    }
+
+    function handleLogin() {
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      if (user && pass) {
+        // TODO: Replace with secure validation logic
+        localStorage.setItem('mythUser', user);
+        loggedInUser = user;
         renderAuthArea();
+        renderLoginForm();
+        loadMembers();
       }
     }
 
     function loadMembers() {
-      const memberData = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo'];
+      const members = [
+        { name: 'Alpha', role: 'Leader', activity: 'Online 2 hours ago' },
+        { name: 'Bravo', role: 'Co-Leader', activity: 'Online 5 hours ago' },
+        { name: 'Charlie', role: 'Member', activity: 'Online 3 hours ago' },
+        { name: 'Delta', role: 'Member', activity: 'Online 1 day ago' },
+        { name: 'Echo', role: 'Trial', activity: 'Online 20 mins ago' },
+      ];
       const membersDiv = document.getElementById('members');
-      memberData.forEach(member => {
+      membersDiv.innerHTML = '';
+      members.forEach(member => {
         const div = document.createElement('div');
         div.className = 'member';
-        div.textContent = member;
+        div.innerHTML = `<strong>${member.name}</strong> - ${member.role} <br><small>${member.activity}</small>`;
         membersDiv.appendChild(div);
       });
     }
 
     renderAuthArea();
-    loadMembers();
+    renderLoginForm();
+    if (loggedInUser) loadMembers();
   </script>
 </body>
 </html>
+
