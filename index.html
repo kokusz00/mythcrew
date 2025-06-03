@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Myth Crew</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
+    }
+    body {
+      background: #0f0f0f;
+      color: white;
+    }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: #1c1c1c;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.4);
+    }
+    .logo {
+      font-size: 24px;
+      font-weight: 600;
+      color: #00ffe5;
+    }
+    .auth-btn {
+      background: #00ffe5;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #000;
+    }
+    .container {
+      padding: 40px;
+    }
+    .member-list {
+      background: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,255,229,0.2);
+    }
+    .member-list h2 {
+      margin-bottom: 20px;
+      color: #00ffe5;
+    }
+    .member {
+      padding: 10px 0;
+      border-bottom: 1px solid #333;
+    }
+    .member:last-child {
+      border-bottom: none;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Myth Crew</div>
+    <div id="authArea">
+      <!-- Login/User Display Here -->
+    </div>
+  </header>
+  <div class="container">
+    <div class="member-list">
+      <h2>Members</h2>
+      <div id="members">
+        <!-- Member list will appear here -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Example login state simulation
+    let loggedInUser = localStorage.getItem('mythUser') || null;
+
+    function renderAuthArea() {
+      const authArea = document.getElementById('authArea');
+      authArea.innerHTML = '';
+      if (loggedInUser) {
+        authArea.innerHTML = `<span>Welcome, <strong>${loggedInUser}</strong></span>`;
+      } else {
+        const loginBtn = document.createElement('button');
+        loginBtn.textContent = 'Login';
+        loginBtn.className = 'auth-btn';
+        loginBtn.onclick = showLoginPrompt;
+        authArea.appendChild(loginBtn);
+      }
+    }
+
+    function showLoginPrompt() {
+      const username = prompt('Username:');
+      const password = prompt('Password:');
+      if (username && password) {
+        // TODO: Real validation can be added
+        localStorage.setItem('mythUser', username);
+        loggedInUser = username;
+        renderAuthArea();
+      }
+    }
+
+    function loadMembers() {
+      const memberData = ['Alpha', 'Bravo', 'Charlie', 'Delta', 'Echo'];
+      const membersDiv = document.getElementById('members');
+      memberData.forEach(member => {
+        const div = document.createElement('div');
+        div.className = 'member';
+        div.textContent = member;
+        membersDiv.appendChild(div);
+      });
+    }
+
+    renderAuthArea();
+    loadMembers();
+  </script>
+</body>
+</html>
