@@ -107,6 +107,10 @@
   </div>
 
   <script>
+    const validUsers = {
+      "kokusz": "mythkokusz"
+    };
+
     let loggedInUser = localStorage.getItem('mythUser') || null;
 
     function renderAuthArea() {
@@ -140,13 +144,14 @@
     function handleLogin() {
       const user = document.getElementById('username').value;
       const pass = document.getElementById('password').value;
-      if (user && pass) {
-        // TODO: Replace with secure validation logic
+      if (validUsers[user] && validUsers[user] === pass) {
         localStorage.setItem('mythUser', user);
         loggedInUser = user;
         renderAuthArea();
         renderLoginForm();
         loadMembers();
+      } else {
+        alert("Invalid username or password.");
       }
     }
 
